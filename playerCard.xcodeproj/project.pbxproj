@@ -19,6 +19,7 @@
 		9AB637DC29D5A8FE0080E290 /* SharpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB637DB29D5A8FE0080E290 /* SharpView.swift */; };
 		9AB637DE29D5AEC00080E290 /* jf-openhuninn-2.0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AB637DD29D5AEBF0080E290 /* jf-openhuninn-2.0.ttf */; };
 		9AB637E029D5CC550080E290 /* SetCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB637DF29D5CC550080E290 /* SetCardViewController.swift */; };
+		9AD37D7D29EF8F9200DDD724 /* my-hero.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9AD37D7C29EF8F9200DDD724 /* my-hero.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		9AB637DB29D5A8FE0080E290 /* SharpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharpView.swift; sourceTree = "<group>"; };
 		9AB637DD29D5AEBF0080E290 /* jf-openhuninn-2.0.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "jf-openhuninn-2.0.ttf"; sourceTree = "<group>"; };
 		9AB637DF29D5CC550080E290 /* SetCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardViewController.swift; sourceTree = "<group>"; };
+		9AD37D7C29EF8F9200DDD724 /* my-hero.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "my-hero.mp3"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 		9AB637C029D5777C0080E290 /* playerCard */ = {
 			isa = PBXGroup;
 			children = (
+				9AD37D7C29EF8F9200DDD724 /* my-hero.mp3 */,
 				9AB637DD29D5AEBF0080E290 /* jf-openhuninn-2.0.ttf */,
 				9AB637C129D5777C0080E290 /* AppDelegate.swift */,
 				9AB637C329D5777C0080E290 /* SceneDelegate.swift */,
@@ -146,6 +149,7 @@
 				9AB637CE29D5777D0080E290 /* LaunchScreen.storyboard in Resources */,
 				9AB637DE29D5AEC00080E290 /* jf-openhuninn-2.0.ttf in Resources */,
 				9AB637CB29D5777D0080E290 /* Assets.xcassets in Resources */,
+				9AD37D7D29EF8F9200DDD724 /* my-hero.mp3 in Resources */,
 				9AB637C929D5777C0080E290 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

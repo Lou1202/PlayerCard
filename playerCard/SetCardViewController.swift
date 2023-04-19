@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import AVFoundation
 
 class SetCardViewController: UIViewController {
     
+    let player = AVPlayer()
     var timer: Timer?
     var playerImageArray = ["AL天使", "AL太空人", "AL水手", "AL白襪", "AL光芒", "AL印地安人", "AL老虎", "AL金鶯", "AL洋基", "AL皇家", "AL紅襪", "AL遊騎兵", "AL運動家", "AL藍鳥", "AL雙城", "CPBL兄弟", "CPBL味全", "CPBL時報", "CPBL桃猿", "CPBL統一", "CPBL誠泰", "CPBL興農", "CPBL鯨", "CPBL三商", "CT中華隊", "NL大都會", "NL小熊", "NL巨人", "NL勇士", "NL洛磯", "NL紅人", "NL紅雀", "NL海盜", "NL馬林魚", "NL教士", "NL費城人", "NL道奇", "NL蒙特羅", "NL響尾蛇", "NL釀酒人", "TML太陽", "TML金剛", "TML勇士", "TML雷公"]
 
@@ -31,6 +33,12 @@ class SetCardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let url = Bundle.main.url(forResource: "my-hero", withExtension: "mp3")!
+        let playerItem = AVPlayerItem(url: url)
+        player.replaceCurrentItem(with: playerItem)
+        player.play()
+        
         setupGradientBackground()
         titleLabel.transform = CGAffineTransform(rotationAngle: -.pi / 80)
         initialImageView()
