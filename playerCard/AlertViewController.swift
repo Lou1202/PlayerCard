@@ -6,16 +6,29 @@
 //
 
 import UIKit
+import AVFoundation
 
 class AlertViewController: UIViewController {
     
     var userName: String?
     var playerCardArray: [String]?
+    var playerSeconds: Double!
+    let player = AVPlayer()
 
     @IBOutlet weak var alertLabel: UILabel!
     @IBOutlet weak var playerCardView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("第三次播放前：\(String(describing: playerSeconds))")
+        playerSeconds += 0.75
+        print("第三次播放前：\(String(describing: playerSeconds))")
+        let url = Bundle.main.url(forResource: "my-hero", withExtension: "mp3")!
+        let playerItem = AVPlayerItem(url: url)
+        let time = CMTime(seconds: playerSeconds, preferredTimescale: 1)
+        player.replaceCurrentItem(with: playerItem)
+        player.seek(to: time)
+        player.play()
+        
         if let playerCardArray = self.playerCardArray{
             playerCardView.image = UIImage(named: playerCardArray[1])
         }
@@ -26,6 +39,9 @@ class AlertViewController: UIViewController {
         }
         
         
+    }
+    @IBAction func backHomePage(_ sender: Any) {
+        player.pause()
     }
     
 

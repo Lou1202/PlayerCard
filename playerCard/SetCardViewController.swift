@@ -34,21 +34,25 @@ class SetCardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //播放BBO背景音樂
         let url = Bundle.main.url(forResource: "my-hero", withExtension: "mp3")!
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         player.play()
-        
+        //漸層背景
         setupGradientBackground()
+        //標題旋轉
         titleLabel.transform = CGAffineTransform(rotationAngle: -.pi / 80)
+        //初始球員卡圖片
         initialImageView()
+        //設定Silder Thumb圖案
         hitValueSilder.setThumbImage(UIImage(systemName: "baseball.fill"), for: .normal)
-        
-        
+        //利用timer隨機替換圖片
         timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(changeImageView), userInfo: nil, repeats: true)
         // Do any additional setup after loading the view.
     }
     
+    //漸層背景
     func setupGradientBackground() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
@@ -58,6 +62,7 @@ class SetCardViewController: UIViewController {
         ]
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
+    
     
     @objc func changeImageView(){
         playerImageArray.shuffle()
@@ -72,7 +77,9 @@ class SetCardViewController: UIViewController {
     
     
     @IBAction func filter(_ sender: Any) {
+        //生日條件只能單獨篩選
         if dateSwitch.isOn {
+            //提示視窗
             let alertController = UIAlertController(title: "啟用生日篩選球員卡", message: "只能單獨篩選生日條件，不能加入其他篩選條件。", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "確定啟用", style: .default)
             let cancelAction = UIAlertAction(title: "取消篩選", style: .cancel){ _ in
@@ -81,11 +88,13 @@ class SetCardViewController: UIViewController {
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             present(alertController, animated: true)
+            //其他條件變成初始隨機
             hitValueSilder.value = 15
             positionSegmentedControl.selectedSegmentIndex = 0
             leagueSegmentedControl.selectedSegmentIndex = 0
         }
         
+        //篩選條件最多兩項 超過跳出提示視窗
         if hitValueSilder.value < 10 || hitValueSilder.value > 20, positionSegmentedControl.selectedSegmentIndex != 0, leagueSegmentedControl.selectedSegmentIndex != 0 {
             let alertController = UIAlertController(title: "球員卡篩選限制", message: "守位、聯盟、能力 3項條件，最多只能設定 2個項目！", preferredStyle: .alert)
             let cancelAction = UIAlertAction(title: "重新設定", style: .cancel)
@@ -141,23 +150,31 @@ class SetCardViewController: UIViewController {
     }
     
     @IBSegueAction func setRules(_ coder: NSCoder) -> GetCardViewController? {
+        //關掉隨機圖片timer
         timer?.invalidate()
         let name = String(nameTextField.text!)
+        //傳遞生日篩選條件的月份
         let dateComponents = Calendar.current.dateComponents(in: TimeZone.current, from: birthdayDatePicker.date)
         var month = 0
         if dateSwitch.isOn {
+            //開啟篩選生日switch才有資料
             month = Int(dateComponents.month!)
         }
         let hitValue = Float(hitValueSilder.value)
         let position = Int(positionSegmentedControl.selectedSegmentIndex)
         let league = Int(leagueSegmentedControl.selectedSegmentIndex)
-        let controller = GetCardViewController(coder: coder)
+        let playerSeconds = player.currentTime().seconds
+        print("第一次播放結束：\(playerSeconds)")
+        player.pause()
         
+        let controller = GetCardViewController(coder: coder)
+    
         controller?.userName = name
         controller?.month = month
         controller?.hitValue = hitValue
         controller?.positionIndex = position
         controller?.leagueIndex = league
+        controller?.playerSeconds = playerSeconds
     
         return controller
     }

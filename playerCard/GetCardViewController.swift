@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class GetCardViewController: UIViewController {
     
@@ -21,6 +22,8 @@ class GetCardViewController: UIViewController {
     var scrollSpeed = 0.05
     var playerCardArray = [String]()
     var randomPlayerCardArray = [String]()
+    var playerSeconds: Double!
+    let player = AVPlayer()
 
     var playerCards = [
         PlayerCard(playerName: "M.楚勞特", league: "AL", position: "外野", hitType: "力量型", birthday: 8, teamImageName: "AL天使", imageName: "AL天使2"),
@@ -79,10 +82,22 @@ class GetCardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        playerSeconds += 0.78
+        let url = Bundle.main.url(forResource: "my-hero", withExtension: "mp3")!
+        let playerItem = AVPlayerItem(url: url)
+        let time = CMTime(seconds: playerSeconds, preferredTimescale: 1)
+        player.replaceCurrentItem(with: playerItem)
+        player.seek(to: time)
+        player.play()
+        //背景漸層
         setupGradientBackground()
+        //加入篩選後球員卡
         addPlayerCard()
+        //球員卡洗牌
         shuffleCard()
+        //設定初始四張球員卡圖片
         initialCard()
+        //捲動球員卡拉霸效果
         autoScroll()
         // Do any additional setup after loading the view.
     }
@@ -111,168 +126,62 @@ class GetCardViewController: UIViewController {
         playerCard4ImageView.image = UIImage(named: randomPlayerCardArray[3])
     }
     
-    func addPlayerCard(){
-        //先篩選球員卡守備位置
-        switch positionIndex {
-        case 1:
-            for i in 0..<playerCards.count {
-                //篩選MLB內野球員卡
-                if leagueIndex == 1 {
-                    if playerCards[i].position.contains("內野"), playerCards[i].league == "AL" || playerCards[i].league == "NL" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //篩選台灣內野球員卡
-                } else if leagueIndex == 2 {
-                    if playerCards[i].position.contains("內野"), playerCards[i].league != "AL", playerCards[i].league != "NL" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //篩選打擊型內野球員卡
-                } else if hitValue < 10 {
-                    if playerCards[i].position.contains("內野"), playerCards[i].hitType == "打擊型" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //篩選力量型內野球員卡
-                } else if hitValue > 20{
-                    if playerCards[i].position.contains("內野"), playerCards[i].hitType == "力量型" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //只篩選內野球員卡
-                }else{
-                    if playerCards[i].position.contains("內野") {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                }
-            }
-        case 2:
-            for i in 0..<playerCards.count {
-                //篩選MLB外野球員卡
-                if leagueIndex == 1 {
-                    if playerCards[i].position.contains("外野"), playerCards[i].league == "AL" || playerCards[i].league == "NL" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //篩選台灣外野球員卡
-                } else if leagueIndex == 2 {
-                    if playerCards[i].position.contains("外野"), playerCards[i].league != "AL", playerCards[i].league != "NL" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //篩選打擊型外野球員卡
-                } else if hitValue < 10 {
-                    if playerCards[i].position.contains("外野"), playerCards[i].hitType == "打擊型" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //篩選力量型外野球員卡
-                } else if hitValue > 20{
-                    if playerCards[i].position.contains("外野"), playerCards[i].hitType == "力量型" {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                    //只篩選外野球員卡
-                }else{
-                    if playerCards[i].position.contains("外野") {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                }
-            }
-        default:
-            //剩下篩選球員卡聯盟
-            switch leagueIndex {
+    func filterPlayerCards() -> [String] {
+        let filteredCards = playerCards.filter { card in
+            switch positionIndex {
             case 1:
-                for i in 0..<playerCards.count {
-                    //篩選MLB打擊型球員卡
-                    if hitValue < 10{
-                        if playerCards[i].league == "AL" || playerCards[i].league == "NL", playerCards[i].hitType == "打擊型"{
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                        //篩選MLB力量型球員卡
-                    } else if hitValue > 20 {
-                        if playerCards[i].league == "AL" || playerCards[i].league == "NL", playerCards[i].hitType == "力量型"{
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                        //篩選MLB球員卡
-                    } else {
-                        if playerCards[i].league == "AL" || playerCards[i].league == "NL" {
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                    }
-                }
+                if !card.position.contains("內野") { return false }
             case 2:
-                for i in 0..<playerCards.count {
-                    //篩選台灣打擊型球員卡
-                    if hitValue < 10{
-                        if playerCards[i].league != "AL", playerCards[i].league != "NL", playerCards[i].hitType == "打擊型"{
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                        //篩選台灣力量型球員卡
-                    } else if hitValue > 20 {
-                        if playerCards[i].league != "AL", playerCards[i].league != "NL", playerCards[i].hitType == "力量型"{
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                        //篩選台灣球員卡
-                    } else {
-                        if playerCards[i].league != "AL", playerCards[i].league != "NL" {
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                    }
-                }
+                if !card.position.contains("外野") { return false }
             default:
-                switch Int(hitValue){
-                    //篩選打擊型球員卡
-                case ..<10:
-                    for i in 0..<playerCards.count {
-                        if playerCards[i].hitType == "打擊型" {
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                    }
-                    //篩選力量型球員卡
-                case 20...:
-                    for i in 0..<playerCards.count {
-                        if playerCards[i].hitType == "力量型" {
-                            playerCardArray.append(playerCards[i].imageName)
-                        }
-                    }
-                    
-                default:
-                    //無篩選條件
-                    for i in 0..<playerCards.count {
-                        playerCardArray.append(playerCards[i].imageName)
-                    }
-                }
+                break
             }
             
+            switch leagueIndex {
+            case 1:
+                if card.league != "AL" && card.league != "NL" { return false }
+            case 2:
+                if card.league == "AL" || card.league == "NL" { return false }
+            default:
+                break
+            }
+            
+            switch Int(hitValue) {
+            case ..<10:
+                if card.hitType != "打擊型" { return false }
+            case 20...:
+                if card.hitType != "力量型" { return false }
+            default:
+                break
+            }
+            
+            switch month {
+            case 1, 2, 3:
+                if card.birthday > 3 { return false }
+            case 4, 5, 6:
+                if card.birthday < 4 || card.birthday > 6 { return false }
+            case 7, 8, 9:
+                if card.birthday < 7 || card.birthday > 9 { return false }
+            case 10, 11, 12:
+                if card.birthday < 10 || card.birthday > 12 { return false }
+            default:
+                break
+            }
+            
+            return true
         }
-        
-        //篩選球員卡生日月份
-        switch month {
-        case 1, 2 ,3:
-            for i in 0...playerCards.count - 1 {
-                if playerCards[i].birthday >= 1 ,playerCards[i].birthday <= 3 {
-                    playerCardArray.append(playerCards[i].imageName)
-                }
-            }
-        case 4, 5 ,6:
-            for i in 0...playerCards.count - 1 {
-                if playerCards[i].birthday >= 4 ,playerCards[i].birthday <= 6 {
-                    playerCardArray.append(playerCards[i].imageName)
-                }
-            }
-        case 7, 8 ,9:
-            for i in 0...playerCards.count - 1 {
-                if playerCards[i].birthday >= 7 ,playerCards[i].birthday <= 9 {
-                    playerCardArray.append(playerCards[i].imageName)
-                }
-            }
-        case 10, 11 ,12:
-            for i in 0...playerCards.count - 1{
-                if playerCards[i].birthday >= 10 ,playerCards[i].birthday <= 12 {
-                    playerCardArray.append(playerCards[i].imageName)
-                }
-            }
-        default:
-            break
-        }
+        return filteredCards.map { $0.imageName }
     }
     
+    func addPlayerCard() {
+        playerCardArray = filterPlayerCards()
+    }
+    
+    
+    
+    //篩選後洗牌
     func shuffleCard(){
-        
+        //超過１０張再篩選(節省拉霸轉盤時間)
         if playerCardArray.count > 10{
             playerCardArray = playerCardArray.shuffled()
             for i in 0...10{
@@ -330,7 +239,7 @@ class GetCardViewController: UIViewController {
             randomCardScrollView.contentOffset.y = CGFloat(scrollDistance)
         }
         
-        //
+        //三次的滾動速度漸漸變緩
         switch rounds{
             case 0:
                 timer?.invalidate()
@@ -348,7 +257,10 @@ class GetCardViewController: UIViewController {
         
         //跑完滾動次數 顯示抽到的球員卡
         if rounds == 0 {
+            let playerSeconds = player.currentTime().seconds
+            player.pause()
             if let controller = storyboard?.instantiateViewController(withIdentifier: "AlertView") as? AlertViewController{
+                controller.playerSeconds = playerSeconds
                 controller.userName = userName
                 controller.playerCardArray = randomPlayerCardArray
                 present(controller, animated: true)
@@ -363,6 +275,8 @@ class GetCardViewController: UIViewController {
     
     @IBAction func backSetPage(_ sender: Any) {
         
+        print("第二次播放結束：\(String(describing: playerSeconds))")
+        player.pause()
         if let controller = storyboard?.instantiateViewController(withIdentifier: "SetCardView"){
             timer?.invalidate()
             present(controller, animated: true)

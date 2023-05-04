@@ -410,7 +410,7 @@
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhA-vE-mxW">
-                                <rect key="frame" x="16" y="30" width="78" height="30"/>
+                                <rect key="frame" x="16" y="30" width="77.5" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" subtitle="重新抽卡"/>
                                 <connections>
@@ -463,6 +463,7 @@
                                     <color key="baseBackgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </buttonConfiguration>
                                 <connections>
+                                    <action selector="backHomePage:" destination="2Kq-Dd-zsv" eventType="touchUpInside" id="OMv-dI-PnK"/>
                                     <action selector="backSetPage:" destination="4pl-Yh-znl" eventType="touchUpInside" id="ks2-Rl-DC1"/>
                                     <segue destination="BYZ-38-t0r" kind="show" id="to6-Lk-HMB"/>
                                 </connections>
