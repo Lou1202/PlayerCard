@@ -8,12 +8,18 @@
 import UIKit
 import AVFoundation
 
-class SetCardViewController: UIViewController {
+protocol MusicControlDelegate {
+    func stopMusic()
+}
+
+
+class SetCardViewController: UIViewController, MusicControlDelegate {
     
-    let player = AVPlayer()
+    var musicDelegate: MusicControlDelegate?
+    static let player = AVPlayer()
     var timer: Timer?
     var playerImageArray = ["AL天使", "AL太空人", "AL水手", "AL白襪", "AL光芒", "AL印地安人", "AL老虎", "AL金鶯", "AL洋基", "AL皇家", "AL紅襪", "AL遊騎兵", "AL運動家", "AL藍鳥", "AL雙城", "CPBL兄弟", "CPBL味全", "CPBL時報", "CPBL桃猿", "CPBL統一", "CPBL誠泰", "CPBL興農", "CPBL鯨", "CPBL三商", "CT中華隊", "NL大都會", "NL小熊", "NL巨人", "NL勇士", "NL洛磯", "NL紅人", "NL紅雀", "NL海盜", "NL馬林魚", "NL教士", "NL費城人", "NL道奇", "NL蒙特羅", "NL響尾蛇", "NL釀酒人", "TML太陽", "TML金剛", "TML勇士", "TML雷公"]
-
+    
     @IBOutlet weak var player1ImageView: SharpImageView!
     @IBOutlet weak var player2ImageView: SharpImageView!
     @IBOutlet weak var player3ImageView: SharpImageView!
@@ -34,11 +40,9 @@ class SetCardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        musicDelegate = self
         //播放BBO背景音樂
-        let url = Bundle.main.url(forResource: "my-hero", withExtension: "mp3")!
-        let playerItem = AVPlayerItem(url: url)
-        player.replaceCurrentItem(with: playerItem)
-        player.play()
+        playMusic()
         //漸層背景
         setupGradientBackground()
         //標題旋轉
@@ -52,6 +56,8 @@ class SetCardViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+
+    
     //漸層背景
     func setupGradientBackground() {
         let gradientLayer = CAGradientLayer()
@@ -61,6 +67,18 @@ class SetCardViewController: UIViewController {
             UIColor.white.cgColor
         ]
         view.layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
+    func playMusic() {
+        let url = Bundle.main.url(forResource: "my-hero", withExtension: "mp3")!
+        let playerItem = AVPlayerItem(url: url)
+        SetCardViewController.player.replaceCurrentItem(with: playerItem)
+        SetCardViewController.player.play()
+    }
+    
+    
+    func stopMusic() {
+        SetCardViewController.player.pause()
     }
     
     
@@ -163,10 +181,6 @@ class SetCardViewController: UIViewController {
         let hitValue = Float(hitValueSilder.value)
         let position = Int(positionSegmentedControl.selectedSegmentIndex)
         let league = Int(leagueSegmentedControl.selectedSegmentIndex)
-        let playerSeconds = player.currentTime().seconds
-        print("第一次播放結束：\(playerSeconds)")
-        player.pause()
-        
         let controller = GetCardViewController(coder: coder)
     
         controller?.userName = name
@@ -174,7 +188,6 @@ class SetCardViewController: UIViewController {
         controller?.hitValue = hitValue
         controller?.positionIndex = position
         controller?.leagueIndex = league
-        controller?.playerSeconds = playerSeconds
     
         return controller
     }
